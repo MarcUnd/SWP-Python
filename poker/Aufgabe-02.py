@@ -41,7 +41,7 @@ def checkHands(cardHand):
                     return
                 results[5] += 1
                 #print("Flush")
-            elif valueArr[4] - 4 == valueArr[0]:
+            elif (valueArr[4] - 4 == valueArr[0]):
                 results[4] += 1
                 #print("Straight")
             else:
@@ -82,9 +82,13 @@ def checkProbability(couIterations):
         print(posHands[results.index(i)],": ", i)
         probs.append(i/couIterations)
     print("Berechnete Wahrscheinlichkeiten:\t",probs)
-
-if __name__ == '__main__':
+    
+def main():
     #hand = getHand(52)
     #checkHands(hand)
-    doOften(100000)
+    repetitions = input("Anzahl Wiederholungen: ")
+    doOften(int(repetitions))
     print("Tatsächliche Wahrscheinlichkeiten:\t",realProbability)
+
+if __name__ == '__main__':
+    main()
