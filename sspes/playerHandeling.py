@@ -3,6 +3,8 @@ import heapq
 import random
 
 def create(player_name, outfile):
+    if exists(player_name, outfile):
+        return 'player already exists!'
     #Reihenfolge der choices: rock, spock, paper, lizard, scissors
     player_dic = {'name': player_name, 'wins': 0, 'loss': 0, 'draw': 0, 'games': 0, 'ratio': 0, 'choices':[0,0,0,0,0]}
     with open(outfile, 'r') as out:
@@ -10,6 +12,7 @@ def create(player_name, outfile):
     data.append(player_dic)
     with open(outfile, 'w') as out:
         json.dump(data, out, indent=4, separators=(',',': '))
+    return exists(player_name, outfile)
 
 
 def exists(player_name, outfile):
@@ -30,24 +33,27 @@ def delete(player_name, outfile):
     data.pop(i)
     with open(outfile, 'w') as out:
         json.dump(data, out, indent=4, separators=(',',': '))
+    return not exists(player_name, outfile)
 
 def getPlayers(player_name, outfile):
     with open(outfile, 'r') as out:
         data = json.load(out)
         
     if player_name in ['a', 'all']:
+        value = []
         for d in data:
-            print('\n', d)
+            value.append(d)
+        return value
             
     elif exists(player_name, outfile):
         for d in data:
             if d['name'] == player_name:
-                print('\n', d, '\n')
+                return d
                 
     else:
-        print('Player does not exist!')
+        return 'player does not exist!'
 
-def updateStats(player_name, outfile, statsArr, choice):
+def updateStats(player_name, statsArr, choice, outfile):
     with open(outfile, 'r') as out:
         data = json.load(out)
     for d in data:
@@ -56,11 +62,12 @@ def updateStats(player_name, outfile, statsArr, choice):
     data[i]['wins'] += statsArr[0]
     data[i]['loss'] += statsArr[1]
     data[i]['draw'] += statsArr[2]
-    data[i]['games'] += statsArr[3]
+    data[i]['games'] += 1
     data[i]['ratio'] = round(data[i]['wins'] / data[i]['games'], 3)
     data[i]['choices'][choice] += 1
     with open(outfile, 'w') as out:
         json.dump(data, out, indent=4, separators=(',',': '))
+    return data
 
 
 def compChoice(player_name, outfile):
@@ -75,14 +82,14 @@ def compChoice(player_name, outfile):
                     best_choices.sort()
                     print(best_choices)
                     if best_choices[1] == best_choices[2]:
-                        return best_choices[1]
+                        return str(best_choices[1])
                     for i in range(len(best_choices)):
                         if best_choices[i] in most_used:
-                            return best_choices[i]
+                            return str(best_choices[i])
                 else:
-                    return random.randrange(0, 4)
+                    return str(random.randrange(0, 4))
             else:
-                return random.randrange(0, 4)
+                return str(random.randrange(0, 4))
  
 
 def getHighestIndizes(input_list):

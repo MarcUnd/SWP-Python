@@ -1,10 +1,11 @@
 import random
 import json
 import playerHandeling as ph
+import requests
 
 rpsls = {'rock': 0, 'spock': 1, 'paper': 2, 'lizard': 3, 'scissors': 4}
 list_keys = list(rpsls.keys())
-jsonfile = 'player_data.json'
+url = 'http://127.0.0.1:5000/'
 
 
 
@@ -15,18 +16,18 @@ def getString(my_input):
     return 'not valid'
 
 def checkWinner(comp_choice, player_choice, player_name):
-    stats = [0,0,0,1]
+    stats = 0
     difference = (comp_choice - player_choice) % 5
     if(difference == 0):
-        stats[2] = 1
+        stats = 2
         print('draw\n')
     elif( difference == 1 or difference == 2 ):
-        stats[1] = 1
+        stats = 1
         print( "Computer wins!\n")
     elif ( difference == 4 or difference == 3 ):
-        stats[0] = 1
+        stats = 0
         print( "Player wins!\n")
-    ph.updateStats(player_name, jsonfile, stats, player_choice)
+    r = requests.get(url=url+'update', params={'name':player_name, 'win': stats, 'choice': player_choice})
     
     
 def playerSelection():
@@ -35,16 +36,12 @@ def playerSelection():
         
         if player_sel == 'c':
             player_sel = input('Please input name:')
-            if not ph.exists(player_sel, jsonfile):
-                ph.create(player_sel, jsonfile)
-                print('Have fun ' + player_sel + '\n\n\n')
-                return player_sel
-            else:
-                print('That player already exists, please create another one or choose a player that already exists.')
-                
+            requests.post(url = url + player_sel)
+            print('Have fun ' + player_sel + '\n\n\n')
+            return player_sel
         elif player_sel == 's':
             player_sel = input('Please choose a player:')
-            if ph.exists(player_sel, jsonfile):
+            if str(requests.get(url=url+player_sel) == player_sel):
                 print('Have fun ' + player_sel + '\n\n\n')
                 return player_sel
             else:
@@ -52,17 +49,20 @@ def playerSelection():
                 
         elif player_sel == 'd':
             player_sel = input('Please choose a player:')
-            if ph.exists(player_sel, jsonfile):
+            if str(requests.get(url=url+player_sel) == player_sel):
                 conformation = input('To Confirm please type (DELETE):')
                 if conformation == 'DELETE':
-                    ph.delete(player_sel, jsonfile)
+                    requests.delete(url=url+player_sel)
                     print('You succesfully deleted player ' + player_sel)
             else:
                 print('Player does not exist')
                 
         elif player_sel == 'l':
             player_sel = input('Chose a player you would like to select (name/all):')
-            ph.getPlayers(player_sel, jsonfile)
+            r = requests.get(url=url+player_sel)
+            data = r.json()
+            for d in data:
+                print(d)
             
         elif player_sel in ['exit', 'leave', 'bye','e']:
             print('goodbye')
@@ -82,7 +82,7 @@ def game(curr_player):
                 player_in = getString(int(player_in))
                 
             print('Player-Choice: ' + player_in)
-            comp_num = ph.compChoice(curr_player, jsonfile)
+            comp_num = int(requests.get(url=url+'ai-choice/'+curr_player).json())
             print('AI-Choice: ' + getString(comp_num) + '\n')
             
             checkWinner(comp_num, player_num, curr_player)

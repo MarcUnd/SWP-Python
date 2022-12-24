@@ -1,5 +1,7 @@
 class firma():
     
+    a = 'dödl'
+    
     def __init__(self, name, abteilungen):
         self.name = name
         self.abteilungen = abteilungen
@@ -38,6 +40,9 @@ class firma():
                 else:
                     dic['other'] += round(1/ges, 4)
         return dic
+    
+    def __str__(self):
+        return f'{self.name} is doll'
     
     
 class abteilung():
@@ -90,3 +95,6 @@ if __name__ == '__main__':
     f1.abteilungen = [a1, a2]
     
     print(f1.getGenderRatio())
+    
+    print(f1)
+    
