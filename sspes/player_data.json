@@ -1,17 +1,32 @@
 [
     {
         "name": "marc",
-        "wins": 34,
-        "loss": 46,
-        "draw": 40,
-        "games": 120,
-        "ratio": 0.283,
+        "wins": 92,
+        "loss": 123,
+        "draw": 81,
+        "games": 296,
+        "ratio": 0.311,
         "choices": [
-            25,
-            57,
+            32,
+            68,
+            108,
+            44,
+            44
+        ]
+    },
+    {
+        "name": "test",
+        "wins": 10,
+        "loss": 14,
+        "draw": 7,
+        "games": 31,
+        "ratio": 0.323,
+        "choices": [
             0,
-            1,
-            37
+            8,
+            10,
+            8,
+            5
         ]
     }
 ]

@@ -51,7 +51,7 @@ def getPlayers(player_name, outfile):
                 return d
                 
     else:
-        return 'player does not exist!'
+        return {'name': 'Player does not exist'}
 
 def updateStats(player_name, statsArr, choice, outfile):
     with open(outfile, 'r') as out:
