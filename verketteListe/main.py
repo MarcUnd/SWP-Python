@@ -6,15 +6,11 @@ def main():
     test.append('hi')
     test.append('yo')
     
-    print(test)
-    test.insert('hallo',5)
-    print(test)
+    yo = test.copy()
+    
+    print(yo)
     
     
     
-    
-    
-
-
 if __name__ == '__main__':
     main()

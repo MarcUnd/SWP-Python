@@ -3,6 +3,7 @@ import json
 import playerHandeling as ph
 import requests
 from termcolor import colored
+import matplotlib.pyplot as plt
 
 rpsls = {'rock': 0, 'spock': 1, 'paper': 2, 'lizard': 3, 'scissors': 4}
 list_keys = list(rpsls.keys())
@@ -73,6 +74,9 @@ def playerSelection():
                     print(colored(str(d) + '\n', 'magenta'))
             else:
                 print(colored(str(data), 'magenta'))
+                plt.bar(range(len(data)-3), list(data.values())[1:-2], tick_label=list(data.keys())[1:-2], color=['green', 'red', 'yellow', 'cyan'])
+                plt.title('Statistic from ' + data['name'])
+                plt.show()
             print('\n')
             
         elif player_sel in ['exit', 'leave', 'bye','e']:

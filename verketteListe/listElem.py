@@ -9,7 +9,10 @@ class listElem:
         pass
     
     def setNextElem(self, nextElem):
-        self.nextElem = listElem(nextElem)
+        if type(nextElem) == listElem:
+            self.nextElem = nextElem
+        else:
+            self.nextElem = listElem(nextElem)
         
     def getNextElem(self):
         return self.nextElem

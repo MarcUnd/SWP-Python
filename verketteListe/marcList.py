@@ -4,6 +4,7 @@ class marcList:
     
     def __init__(self, startElem=None, *args):
         self.startElem = le.listElem(startElem)
+        self.iter_help = self.startElem
         for a in args:
             self.append(a)
     
@@ -11,24 +12,32 @@ class marcList:
         return self
     
     def __next__(self):
-        if not self.startElem:
+        if not self.iter_help:
+            self.iter_help = self.startElem
             raise StopIteration
         else:
-            item = self.startElem
-            self.startElem = self.startElem.getNextElem()
-            return item
+            item = self.iter_help
+            self.iter_help = self.iter_help.getNextElem()
+            return item.getCurrElem()
     
     def last(self):
         curr = self.startElem
-        while not curr.getNextElem() == None:
-            curr = curr.getNextElem()
+        if not curr:
+            return curr
+        else:
+            while not curr.getNextElem() == None:
+                curr = curr.getNextElem()
         return curr
 
     def first(self):
         return self.startElem
     
     def append(self, nextElem):
-        self.last().setNextElem(nextElem)
+        if not self.startElem.currElem:
+            self.startElem = le.listElem(nextElem)
+            self.iter_help = self.startElem
+        else:
+            self.last().setNextElem(nextElem)
     
     def contains(self, item):
         curr = self.startElem
@@ -52,20 +61,25 @@ class marcList:
         curr = self.startElem
         count = 0
         while not curr == None:
-            if item == curr.currElem:
+            if item == curr.getCurrElem():
                 return int(count)
             curr = curr.getNextElem()
             count += 1
         raise Exception('Item not in list!')
     
     def pop(self, index:int):
-        if index >= 0 and index <= self.index(self.last().currElem):
+        if index >= 0 and index <= self.index(self.last().getCurrElem()):
+            poped = self.get(index).getCurrElem()
             if index == 0:
                 self.startElem = self.get(index).getNextElem()
+                self.iter_help = self.startElem
             else:
-                self.get(index-1).setNextElem(self.get(index+1))
+                prev = self.get(index-1)
+                next = self.get(index+1)
+                prev.setNextElem(next)
         else:
             raise Exception('Index out of bounds!')
+        return poped
                 
     def remove(self, item):
         if self.contains(item):
@@ -89,19 +103,28 @@ class marcList:
                 self.append(i)
     
     def copy(self):
-        newlist = marcList(self.startElem)
-        lastIndex = self.index(self.last().currElem)
-        for i in range(1,lastIndex+1):
-            newlist.append(self.get(i))
-        return newlist
+        curr = self.startElem
+        new_list = marcList(curr)
+        while not curr == None:
+            curr = curr.getNextElem()
+            print(curr)
+            new_list.append(curr)
+        
+        return new_list
     
-    def insert(self, item, index):
-        prev = self.get(index-1)
-        nextItems = marcList(self.get(index))
-        for i in range(index+1, len(self)):
-            nextItems.append(self.get(i))
-        prev.setNextElem(item)
-        self.extend(nextItems)
+    def insert(self, item, index:int):
+        if index == 0:
+            prev = self.copy()
+            self.startElem = le.listElem(item)
+            self.iter_help = self.startElem
+            self.extend(prev)
+        else:
+            prev = self.get(index-1)
+            nextItems = marcList(self.get(index))
+            for i in range(index+1, len(self)):
+                nextItems.append(self.get(i))
+            prev.setNextElem(item)
+            self.extend(nextItems)
             
     def __len__(self):
         curr = self.startElem
