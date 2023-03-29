@@ -99,32 +99,25 @@ class marcList:
             
     def extend(self, *args):
         for item in args:
-            for i in item:
-                self.append(i)
+            self.append(item)
     
     def copy(self):
-        curr = self.startElem
-        new_list = marcList(curr)
-        while not curr == None:
-            curr = curr.getNextElem()
-            print(curr)
-            new_list.append(curr)
-        
-        return new_list
+        return marcList(*[self.get(i).getCurrElem() for i in range(len(self))])
     
     def insert(self, item, index:int):
         if index == 0:
             prev = self.copy()
             self.startElem = le.listElem(item)
             self.iter_help = self.startElem
-            self.extend(prev)
+            self.extend(*prev)
         else:
             prev = self.get(index-1)
-            nextItems = marcList(self.get(index))
-            for i in range(index+1, len(self)):
-                nextItems.append(self.get(i))
+            old = [self.get(i).getCurrElem() for i in range(index, len(self))]
             prev.setNextElem(item)
-            self.extend(nextItems)
+            self.extend(*old)
+        
+    def __getitem__(self, index):
+        return self.get(index)
             
     def __len__(self):
         curr = self.startElem

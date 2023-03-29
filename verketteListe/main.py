@@ -1,15 +1,11 @@
-import marcList as ml
+from marcList import marcList as mlist
 
 def main():
-    test = ml.marcList(1, 2, 3, 5, 8, 5)
-    test.append('end')
-    test.append('hi')
-    test.append('yo')
+    test = mlist(1, 2, 3, 5, 8, 5)
     
-    yo = test.copy()
+    print(test[2])
     
-    print(yo)
-    
+
     
     
 if __name__ == '__main__':
